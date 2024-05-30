@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema(
     media: [{
         type: String
     }],
+    lastLogin: {
+        type: Date,
+        default : Date.now
+    },
     isVerified : {
         type: Boolean,
         default : false

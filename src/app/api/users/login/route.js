@@ -36,6 +36,10 @@ export async function POST(req) {
       );
     }
 
+    // Update lastLogin field
+    user.lastLogin = new Date();
+    await user.save();
+
     // Create token data
     const tokenData = {
       id: user._id,
