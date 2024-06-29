@@ -41,12 +41,15 @@ export async function POST(request) {
 
     await User.findOneAndDelete({ email });
 
-    return NextResponse.json(
-      {
-        message: "Account deleted successfully",
-      },
-      { status: 200 }
-    );
+    const response = NextResponse.json({
+      message: "Account successfully deleted",
+      success: true,
+    });
+    response.cookies.set("token", "", {
+      httpOnly: true,
+      expires: new Date(0),
+    });
+    return response;
   } catch (error) {
     return NextResponse.json(
       {
