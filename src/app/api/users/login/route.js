@@ -15,15 +15,18 @@ export async function POST(req) {
     // Check if user already exists
     const user = await User.findOne({ email });
 
+    if (!user) {
+      return NextResponse.json(
+        { message: "User not found. Please sign up" },
+        { status: 400 }
+      );
+    }
+
     if (!user.isVerified) {
       return NextResponse.json(
         { message: "Please Verify your account" },
         { status: 400 }
       );
-    }
-
-    if (!user) {
-      return NextResponse.json({ message: "Invalid Email" }, { status: 400 });
     }
 
     // Check password
