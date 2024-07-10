@@ -46,7 +46,7 @@ function VerifyEmailPage() {
               button below.
             </h2>
             <h2 className="text-lg text-gray-800 mt-2">
-              You're now ready to securely store your photos and videos with us.
+              You are now ready to securely store your photos and videos with us.
             </h2>
           </div>
         )}

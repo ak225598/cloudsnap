@@ -5,7 +5,7 @@ import Background from "@/components/Background";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-const changePasswordPage = () => {
+const ChangePasswordPage = () => {
   const router = useRouter();
   const [token, setToken] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -95,4 +95,4 @@ const changePasswordPage = () => {
   );
 };
 
-export default changePasswordPage;
+export default ChangePasswordPage;

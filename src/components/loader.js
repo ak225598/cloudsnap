@@ -19,7 +19,7 @@ export default function Loader() {
   return (
     <div className="flex flex-col justify-center items-center text-black mt-32">
       <h1 className="text-3xl font-medium mb-8">
-        Just a moment... We're setting up your account!
+        Just a moment... We are setting up your account!
       </h1>
       <div className="w-64 h-4 bg-gray-300 rounded-full overflow-hidden shadow-lg">
         <div

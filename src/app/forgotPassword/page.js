@@ -4,7 +4,7 @@ import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import Background from "@/components/Background";
 
-export default function resetPassword() {
+export default function ResetPassword() {
   const [email, setEmail] = useState("");
 
   const handleSubmit = async (event) => {
