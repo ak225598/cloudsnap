@@ -1,36 +1,116 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Cloudsnap
 
-## Getting Started
+Cloudsnap is a comprehensive media management web application built with Next.js and Node.js. It provides users with an intuitive interface to upload, organize, and manage their media files securely and efficiently.
 
-First, run the development server:
+![Screenshot](/public/screenshot1.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Table of Contents
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Setup and Installation](#setup-and-installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- Secure user authentication using JWT.
+- Media upload, storage, and retrieval with Cloudinary.
+- Responsive and intuitive user interface with Tailwind CSS.
+- Profile management and personalized user settings.
+- Integrated help support for user assistance.
 
-## Learn More
+## Technologies Used
 
-To learn more about Next.js, take a look at the following resources:
+- **Frontend:**
+  - React.js
+  - Next.js
+  - Tailwind CSS
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Backend:**
+  - Node.js
+  - MongoDB
+  - Mongoose
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- **Utilities:**
+  - JSON Web Tokens (JWT)
+  - Nodemailer
+  - Cloudinary
 
-## Deploy on Vercel
+## Setup and Installation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/ak225598/cloudsnap.git
+   cd cloudsnap
+2. **Install dependencies:**
+   ```bash
+   npm install
+3. **Configure environment variables:**
+   - Create a `.env` file in the root directory.
+   - Add the following environment variables:
+     ```env
+      DB_CONNECTION_URL=<your-mongodb-connection-string>
+      JWT_SECRET_KEY=<your-jwt-secret-key>
+      MAILER_HOST=<your-mailer-host>
+      MAILER_SERVICE=<your-mailer-service>
+      MAILER_PORT=<your-mailer-port>
+      MAILER_EMAIL=<your-mailer-email>
+      MAILER_PASSWORD=<your-mailer-password>
+      MAILER_LOGO_URL=<your-mailer-logo-url>
+      DOMAIN=<your-domain>
+      CLOUDINARY_NAME=<your-cloudinary-name>
+      NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=<your-cloudinary-cloud-name>
+      NEXT_PUBLIC_CLOUDINARY_API_KEY=<your-cloudinary-api-key>
+      CLOUDINARY_API_SECRET=<your-cloudinary-api-secret>
+     ```
+4. **Run the application:**
+   ```bash
+   npm run dev
+5. **Access the application:**
+   - Open your browser and navigate to `http://localhost:3000`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Usage
+  You can see the live application [here](https://cloudsnap-two.vercel.app/).
+- **User Authentication:**
+  - Sign up, log in, and manage your profile securely.
+
+- **Media Management:**
+  - Upload, view, and delete media files easily.
+  - Organize your media with a user-friendly interface.
+
+- **Profile Management:**
+  - Update personal information and change password.
+  - Customize settings for a personalized experience.
+
+- **Help and Support:**
+  - Access integrated help for assistance with common issues.
+
+## Contributing
+
+Contributions to Cloudsnap are appreciated! If you'd like to contribute, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch: `git checkout -b feature/your-feature-name`.
+3. Make your changes and commit them: `git commit -m 'Add some feature'`.
+4. Push to the branch: `git push origin feature/your-feature-name`.
+5. Open a pull request.
+
+Your pull request will be reviewed as soon as possible. Thank you for your interest in improving Cloudsnap!
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+If you have any questions, feedback, or need support, feel free to reach out:
+
+- **Email**: [ankit.iiitbh@gmail.com](mailto:ankit.iiitbh@gmail.com)
+- **LinkedIn**: [Ankit Kumar](https://www.linkedin.com/in/ankitkumar225)
+
+---
+
+Thank you for using Cloudsnap.
