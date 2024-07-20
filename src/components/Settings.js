@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 function Settings() {
   const router = useRouter();
@@ -13,6 +14,12 @@ function Settings() {
   const [isDeletePasswordPopupOpen, setIsDeletePasswordPopupOpen] = useState(false);
   const [isDeleteConfirmPopupOpen, setIsDeleteConfirmPopupOpen] = useState(false);
   const [deletePassword, setDeletePassword] = useState("");
+
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showDeletePassword, setShowDeletePassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
 
   useEffect(() => {
     getUserDetails();
@@ -41,11 +48,26 @@ function Settings() {
     }
   };
 
+  const validatePassword = (password) => {
+    if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters long");
+      return false;
+    } else {
+      setPasswordError("");
+      return true;
+    }
+  };
+
   const handlePasswordChange = async () => {
-    if (newPassword !== confirmPassword) {
-      toast.error("New password and confirm password do not match.");
+    if (!validatePassword(newPassword)) {
       return;
     }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError("New password and confirm password do not match.");
+      return;
+    }
+
     try {
       const email = userData.email;
       const res = await axios.post("/api/users/updatePassword", {
@@ -54,6 +76,9 @@ function Settings() {
         newPassword,
       });
       toast.success(res.data.message);
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -79,8 +104,31 @@ function Settings() {
     setIsDeleteConfirmPopupOpen(true);
   };
 
+  const togglePasswordVisibility = (passwordType) => {
+    switch (passwordType) {
+      case "current":
+        setShowCurrentPassword(!showCurrentPassword);
+        break;
+      case "new":
+        setShowNewPassword(!showNewPassword);
+        break;
+      case "confirm":
+        setShowConfirmPassword(!showConfirmPassword);
+        break;
+      case "delete":
+        setShowDeletePassword(!showDeletePassword);
+        break;
+    }
+  };
+
   return (
     <>
+      <style jsx global>{`
+        input::-ms-reveal,
+        input::-ms-clear {
+          display: none;
+        }
+      `}</style>
       <Toaster position="top-right" />
       <div className="flex flex-col flex-1 p-8 bg-white m-5 rounded-l-xl shadow-lg">
         {userData ? (
@@ -119,27 +167,85 @@ function Settings() {
                   Ensure your account is secure by updating your password
                   regularly.
                 </p>
-                <input
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                  placeholder="Current Password"
-                />
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                  placeholder="New Password"
-                />
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                  placeholder="Confirm New Password"
-                />
+                <div className="relative mb-4">
+                  <input
+                    type={showCurrentPassword ? "text" : "password"}
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    className="w-full p-3 pr-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    placeholder="Current Password"
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    onClick={() => togglePasswordVisibility("current")}
+                  >
+                    <Image
+                      src={showCurrentPassword ? "/hide.png" : "/view.png"}
+                      alt={
+                        showCurrentPassword ? "Hide password" : "Show password"
+                      }
+                      width={20}
+                      height={20}
+                    />
+                  </button>
+                </div>
+                <div className="relative mb-4">
+                  <input
+                    type={showNewPassword ? "text" : "password"}
+                    value={newPassword}
+                    onChange={(e) => {
+                      setNewPassword(e.target.value);
+                      validatePassword(e.target.value);
+                    }}
+                    className={`w-full p-3 pr-10 border ${
+                      passwordError ? "border-red-500" : "border-gray-300"
+                    } rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
+                    placeholder="New Password"
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    onClick={() => togglePasswordVisibility("new")}
+                  >
+                    <Image
+                      src={showNewPassword ? "/hide.png" : "/view.png"}
+                      alt={showNewPassword ? "Hide password" : "Show password"}
+                      width={20}
+                      height={20}
+                    />
+                  </button>
+                </div>
+                <div className="relative mb-4">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className={`w-full p-3 pr-10 border ${
+                      passwordError ? "border-red-500" : "border-gray-300"
+                    } rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
+                    placeholder="Confirm New Password"
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    onClick={() => togglePasswordVisibility("confirm")}
+                  >
+                    <Image
+                      src={showConfirmPassword ? "/hide.png" : "/view.png"}
+                      alt={
+                        showConfirmPassword ? "Hide password" : "Show password"
+                      }
+                      width={20}
+                      height={20}
+                    />
+                  </button>
+                </div>
+                {passwordError && (
+                  <p className="text-red-500 text-sm mt-1 mb-4">
+                    {passwordError}
+                  </p>
+                )}
                 <button
                   onClick={handlePasswordChange}
                   className="w-full bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
@@ -174,13 +280,27 @@ function Settings() {
             <h3 className="text-lg font-semibold mb-4">
               Enter Current Password
             </h3>
-            <input
-              type="password"
-              value={deletePassword}
-              onChange={(e) => setDeletePassword(e.target.value)}
-              className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-              placeholder="Current Password"
-            />
+            <div className="relative mb-4">
+              <input
+                type={showDeletePassword ? "text" : "password"}
+                value={deletePassword}
+                onChange={(e) => setDeletePassword(e.target.value)}
+                className="w-full p-3 pr-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                placeholder="Current Password"
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                onClick={() => togglePasswordVisibility("delete")}
+              >
+                <Image
+                  src={showDeletePassword ? "/hide.png" : "/view.png"}
+                  alt={showDeletePassword ? "Hide password" : "Show password"}
+                  width={20}
+                  height={20}
+                />
+              </button>
+            </div>
             <div className="flex justify-end space-x-4">
               <button
                 onClick={() => setIsDeletePasswordPopupOpen(false)}
