@@ -6,22 +6,27 @@ connect();
 export async function POST(req) {
   try {
     const reqBody = await req.json();
-    const { email, link } = reqBody;
-    // console.log(email)
-    // console.log(link)
+    const { email, link, name } = reqBody;
     const user = await User.findOne({ email });
 
     if (!user) {
-      console.log("User does not exist");
       return NextResponse.json({ message: "Invalid Email" }, { status: 400 });
     }
 
-    // Update the media array with the new link
-    user.media.push(link);
+    const newMediaItem = {
+      url: link,
+      name: name,
+      createdAt: Date.now(),
+    };
+
+    user.media.push(newMediaItem);
     await user.save();
-    return NextResponse.json({ message: "Media link updated successfully" });
+
+    return NextResponse.json(
+      { message: "Media link updated successfully" },
+      { status: 200 }
+    );
   } catch (error) {
-    console.log(error);
-    return NextResponse.json({ message: error });
+    return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }

@@ -9,15 +9,28 @@ const userSchema = new mongoose.Schema(
     email : {
         type : String,
         unique : true,
-        required : [true, "Please provide a email"]
+        required : [true, "Please provide a email"],
+        match: [/.+@.+\..+/, "Please enter a valid email address"],
+        lowercase: true,
     },
     password: {
         type: String,
-        unique : true,
-        required : [true, "Please provide a password"]
+        required : [true, "Please provide a password"],
+        minlength: [6, "Password must be at least 6 characters long"],
     },
     media: [{
-        type: String
+        url: {
+            type: String,
+            required: true
+        },
+        name: {
+            type: String,
+            required: true
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now
+        }
     }],
     lastLogin: {
         type: Date,
