@@ -1,35 +1,31 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { MoreVertical } from "lucide-react";
 
-function MediaCard({ mediaUrl, deletelink }) {
+const getFileType = (url) => {
+  if (!url) return "image";
+  const extension = url.split(".").pop().toLowerCase();
+  switch (extension) {
+    case "mp4":
+      return "video";
+    case "pdf":
+      return "pdf";
+    default:
+      return "image";
+  }
+};
+
+function MediaCard({ media, deleteMedia }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const getFileType = (url) => {
-    if (!url) return "image";
-    const extension = url.split(".").pop();
-    switch (extension) {
-      case "mp4":
-        return "video";
-      case "pdf":
-        return "pdf";
-      default:
-        return "image";
-    }
-  };
+  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
 
   const handleDelete = async () => {
-    // console.log("delete clicked");
-    // console.log(mediaUrl);
     try {
-      const body = {
-        mediaUrl: mediaUrl,
-      };
-      const res = await axios.post("/api/users/deleteMedia", body);
-      // console.log(res);
+      await axios.post("/api/users/deleteMedia", { mediaUrl: media.url });
+      deleteMedia(media.url);
     } catch (error) {
       console.error("Error deleting media:", error);
     }
-    deletelink();
   };
 
   const handleVideoClick = (e) => {
@@ -37,7 +33,7 @@ function MediaCard({ mediaUrl, deletelink }) {
   };
 
   const renderMedia = () => {
-    const type = getFileType(mediaUrl);
+    const type = getFileType(media.url);
     switch (type) {
       case "video":
         return (
@@ -46,14 +42,14 @@ function MediaCard({ mediaUrl, deletelink }) {
             controls
             onClick={handleVideoClick}
           >
-            <source src={mediaUrl} type="video/mp4" />
+            <source src={media.url} type="video/mp4" />
           </video>
         );
       case "pdf":
         return (
           <embed
             className="w-full h-full object-contain border rounded-t-lg p-4"
-            src={mediaUrl}
+            src={media.url}
             type="application/pdf"
           />
         );
@@ -61,7 +57,7 @@ function MediaCard({ mediaUrl, deletelink }) {
         return (
           <img
             className="w-full h-full object-contain border rounded-t-lg p-4"
-            src={mediaUrl}
+            src={media.url}
             alt="Media"
           />
         );
@@ -75,16 +71,38 @@ function MediaCard({ mediaUrl, deletelink }) {
         onClick={() => setIsModalOpen(true)}
       >
         <div className="relative h-48">{renderMedia()}</div>
-        <div className="p-4 flex justify-end items-center">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDelete();
-            }}
-            className="py-1"
-          >
-            <img src="/delete.png" className="w-4 h-4" alt="Delete" />
-          </button>
+        <div className="p-4 flex justify-between items-center">
+          <span className="text-sm text-gray-500 truncate">{media.name}</span>
+          <div className="relative">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsOptionsOpen(!isOptionsOpen);
+              }}
+              className="w-8 h-8 flex items-center justify-center focus:outline-1 rounded-full hover:bg-gray-200"
+            >
+              <MoreVertical className="w-4 h-4" />
+            </button>
+            {isOptionsOpen && (
+              <div className="py-2 absolute right-0 bottom-full mb-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-20">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete();
+                    setIsOptionsOpen(false);
+                  }}
+                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 w-full"
+                >
+                  <img
+                    src="/delete.png"
+                    className="w-4 h-4 mr-2"
+                    alt="Delete"
+                  />
+                  Delete
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -101,6 +119,12 @@ function MediaCard({ mediaUrl, deletelink }) {
               <img src="/close.png" className="w-6 h-6" alt="Close" />
             </button>
             <div className="m-4 h-96 p-4">{renderMedia()}</div>
+            <div className="p-4">
+              <h2 className="text-xl font-bold">{media.name}</h2>
+              <p className="text-sm text-gray-500">
+                Uploaded on: {new Date(media.createdAt).toLocaleString()}
+              </p>
+            </div>
           </div>
         </div>
       )}
@@ -120,7 +144,7 @@ function Media() {
       const res = await axios.get("/api/users/getUserDetails");
       setUserData(res.data.data);
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching user details:", error);
     }
   };
 
@@ -132,12 +156,8 @@ function Media() {
     <div className="container mx-auto p-8">
       <h2 className="text-2xl font-bold mb-4 text-left">Your Media Gallery</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-        {userData?.media.map((mediaUrl, index) => (
-          <MediaCard
-            key={index}
-            mediaUrl={mediaUrl}
-            deletelink={handleDeleteLink}
-          />
+        {userData?.media.map((media, index) => (
+          <MediaCard key={index} media={media} deleteMedia={handleDeleteLink} />
         ))}
       </div>
     </div>
