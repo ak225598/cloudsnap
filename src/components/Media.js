@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { MoreVertical, Search, ChevronDown, Play } from "lucide-react";
+import { MoreVertical, Search, ChevronDown, Play, Download } from "lucide-react";
 
 // Helper function to determine the file type
 const getFileType = (url) => {
@@ -47,6 +47,23 @@ function MediaCard({ media, deleteMedia }) {
 
   const handleVideoClick = (e) => {
     e.preventDefault();
+  };
+
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(media.url);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = media.name;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading file:", error);
+    }
   };
 
   // Function to render appropriate media type
@@ -126,6 +143,17 @@ function MediaCard({ media, deleteMedia }) {
             </button>
             {isOptionsOpen && (
               <div className="py-2 absolute right-0 bottom-full mb-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-20">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDownload();
+                    setIsOptionsOpen(false);
+                  }}
+                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 w-full"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Download
+                </button>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
