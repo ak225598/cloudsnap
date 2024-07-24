@@ -40,6 +40,7 @@ function MediaCard({ media, deleteMedia }) {
     try {
       await axios.post("/api/users/deleteMedia", { mediaUrl: media.url });
       deleteMedia(media.url);
+      await axios.post("/api/cloudinary/delete-asset", { url: media.url });
     } catch (error) {
       console.error("Error deleting media:", error);
     }
