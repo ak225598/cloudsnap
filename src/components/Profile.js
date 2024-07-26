@@ -13,7 +13,6 @@ function Profile() {
   const getUserDetails = async () => {
     try {
       const res = await axios.get("/api/users/getUserDetails");
-      console.log(res);
       setUserData(res.data.data);
     } catch (error) {
       console.log(error);
