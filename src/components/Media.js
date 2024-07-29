@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { MoreVertical, Search, ChevronDown, Play } from "lucide-react";
-import { Download, Copy } from "lucide-react";
+import { Download, Copy, Share2 } from "lucide-react";
 
 // Helper function to determine the file type
 const getFileType = (url) => {
@@ -22,12 +22,14 @@ const getFileType = (url) => {
 function MediaCard({ media, deleteMedia }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+  const [isShareMenuOpen, setIsShareMenuOpen] = useState(false);
   const optionsRef = useRef(null);
 
   useEffect(() => {
     function handleClickOutside(event) {
       if (optionsRef.current && !optionsRef.current.contains(event.target)) {
         setIsOptionsOpen(false);
+        setIsShareMenuOpen(false);
       }
     }
 
@@ -52,6 +54,7 @@ function MediaCard({ media, deleteMedia }) {
     e.preventDefault();
   };
 
+  // Function to handle download
   const handleDownload = async () => {
     try {
       const response = await fetch(media.url);
@@ -71,7 +74,59 @@ function MediaCard({ media, deleteMedia }) {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(media.url);
-    toast.success("Link copied to clipboard");
+    toast.success("Link successfully copied!", {
+      style: {
+        background: "#ffffff",
+        color: "#333333",
+        border: "1px solid #dddddd",
+        borderLeft: "4px solid #4caf50",
+        borderRadius: "10px",
+        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.08)",
+        padding: "14px 18px",
+        fontSize: "14px",
+        fontWeight: "500",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+      },
+      iconTheme: {
+        primary: "#4caf50",
+        secondary: "#ffffff",
+      },
+      duration: 2000,
+    });
+  };
+
+  const handleShare = (platform) => {
+    let shareUrl;
+    switch (platform) {
+      case "x":
+        shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+          media.url
+        )}`;
+        break;
+      case "pinterest":
+        shareUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(
+          media.url
+        )}&media=${encodeURIComponent(
+          media.url
+        )}&description=${encodeURIComponent(media.name)}`;
+        break;
+      case "whatsapp":
+        shareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
+          media.url
+        )}`;
+        break;
+      case "facebook":
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+          media.url
+        )}`;
+        break;
+      default:
+        console.log("Unsupported platform");
+        return;
+    }
+    window.open(shareUrl, "_blank");
   };
 
   // Function to render appropriate media type
@@ -145,13 +200,14 @@ function MediaCard({ media, deleteMedia }) {
               onClick={(e) => {
                 e.stopPropagation();
                 setIsOptionsOpen(!isOptionsOpen);
+                setIsShareMenuOpen(false);
               }}
               className="w-8 h-8 flex items-center justify-center focus:outline-1 rounded-full hover:bg-gray-200"
             >
               <MoreVertical className="w-4 h-4" />
             </button>
             {isOptionsOpen && (
-              <div className="py-2 absolute right-0 bottom-full mb-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-20">
+              <div className="py-1 absolute right-0 bottom-full mb-2 w-40 bg-slate-100 rounded-md overflow-hidden shadow-xl z-20">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -174,6 +230,76 @@ function MediaCard({ media, deleteMedia }) {
                   <Copy className="w-4 h-4 mr-2" />
                   Copy Link
                 </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsShareMenuOpen(!isShareMenuOpen);
+                  }}
+                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 w-full"
+                >
+                  <Share2 className="w-4 h-4 mr-2" />
+                  Share
+                </button>
+                {isShareMenuOpen && (
+                  <div className="px-4 py-2 flex justify-around">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleShare("whatsapp");
+                        setIsOptionsOpen(false);
+                        setIsShareMenuOpen(false);
+                      }}
+                    >
+                      <img
+                        src="/whatsapp.png"
+                        className="w-6 h-6 hover:scale-110"
+                        alt="WhatsApp"
+                      />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleShare("facebook");
+                        setIsOptionsOpen(false);
+                        setIsShareMenuOpen(false);
+                      }}
+                    >
+                      <img
+                        src="/facebook.png"
+                        className="w-6 h-6 hover:scale-110"
+                        alt="Facebook"
+                      />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleShare("x");
+                        setIsOptionsOpen(false);
+                        setIsShareMenuOpen(false);
+                      }}
+                    >
+                      <img
+                        src="/x.png"
+                        className="w-6 h-6 hover:scale-110"
+                        alt="X"
+                      />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleShare("pinterest");
+                        setIsOptionsOpen(false);
+                        setIsShareMenuOpen(false);
+                      }}
+                    >
+                      <img
+                        src="/pinterest.png"
+                        className="w-6 h-6 hover:scale-110"
+                        alt="Pinterest"
+                      />
+                    </button>
+                  </div>
+                )}
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
