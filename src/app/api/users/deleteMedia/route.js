@@ -6,6 +6,8 @@ export async function POST(req) {
   const reqBody = await req.json();
   const { mediaUrl } = reqBody;
 
+  const authUserId = req.headers.get("X-Authenticated-User-ID");
+
   if (!mediaUrl) {
     return NextResponse.json(
       { message: "Media URL is required" },
@@ -15,16 +17,19 @@ export async function POST(req) {
 
   try {
     await connect();
+
     const user = await User.findOneAndUpdate(
-      { "media.url": mediaUrl },
+      { _id: authUserId, "media.url": mediaUrl },
       { $pull: { media: { url: mediaUrl } } },
       { new: true }
     );
 
     if (!user) {
       return NextResponse.json(
-        { message: "User not found or media not found" },
-        { status: 400 }
+        {
+          message: "Media not found or you don't have permission to delete it",
+        },
+        { status: 403 }
       );
     }
 
