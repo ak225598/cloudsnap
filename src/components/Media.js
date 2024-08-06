@@ -42,9 +42,9 @@ function MediaCard({ media, deleteMedia }) {
   // Function to handle media deletion
   const handleDelete = async () => {
     try {
-      await axios.post("/api/users/deleteMedia", { mediaUrl: media.url });
       deleteMedia(media.url);
       await axios.post("/api/cloudinary/delete-asset", { url: media.url });
+      await axios.post("/api/users/deleteMedia", { mediaUrl: media.url });
     } catch (error) {
       console.error("Error deleting media:", error);
     }
