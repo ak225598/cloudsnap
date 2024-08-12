@@ -4,13 +4,18 @@ import { NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-connect();
-
 export async function POST(req) {
   try {
+    await connect();
     const reqBody = await req.json();
     const { email, password } = reqBody;
-    // console.log(reqBody);
+
+    if (!email || !password) {
+      return NextResponse.json(
+        { message: "Required fields missing" },
+        { status: 400 }
+      );
+    }
 
     // Check if user already exists
     const user = await User.findOne({ email });
@@ -25,6 +30,13 @@ export async function POST(req) {
     if (!user.isVerified) {
       return NextResponse.json(
         { message: "Please Verify your account" },
+        { status: 400 }
+      );
+    }
+
+    if (user.googleId && !user.password) {
+      return NextResponse.json(
+        { message: "Please login with google account" },
         { status: 400 }
       );
     }
@@ -51,7 +63,7 @@ export async function POST(req) {
     };
 
     const token = jwt.sign(tokenData, process.env.JWT_SECRET_KEY, {
-      expiresIn: "24h",
+      expiresIn: "7d",
     });
 
     const response = NextResponse.json({
@@ -61,6 +73,7 @@ export async function POST(req) {
 
     response.cookies.set("token", token, {
       httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60,
     });
 
     return response;
