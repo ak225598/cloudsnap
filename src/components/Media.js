@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { MoreVertical, Search, ChevronDown, Play } from "lucide-react";
+import { MoreVertical, Search, ChevronDown, Play, Star } from "lucide-react";
 import { Download, Copy, Share2 } from "lucide-react";
 
 // Helper function to determine the file type
@@ -23,6 +23,7 @@ function MediaCard({ media, deleteMedia }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const [isShareMenuOpen, setIsShareMenuOpen] = useState(false);
+  const [isFav, setIsFav] = useState(media.isFav);
   const optionsRef = useRef(null);
 
   useEffect(() => {
@@ -129,6 +130,11 @@ function MediaCard({ media, deleteMedia }) {
     window.open(shareUrl, "_blank");
   };
 
+  const handleSetFavourite = async () => {
+    setIsFav(!isFav);
+    await axios.post("/api/users/setFav", { mediaUrl: media.url });
+  };
+
   // Function to render appropriate media type
   const renderMedia = (isModal = false) => {
     const type = getFileType(media.url);
@@ -195,7 +201,20 @@ function MediaCard({ media, deleteMedia }) {
         </div>
         <div className="p-4 flex justify-between items-center">
           <span className="text-sm text-gray-500 truncate">{media.name}</span>
-          <div className="relative" ref={optionsRef}>
+          <div className="relative flex justify-normal" ref={optionsRef}>
+            <button
+              className="w-8 h-8 flex items-center justify-center focus:outline-1 rounded-full hover:bg-gray-200"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSetFavourite();
+              }}
+            >
+              <Star
+                className="w-4 h-4 transition-all duration-200"
+                fill={isFav ? "#daad0b" : "none"}
+                stroke={isFav ? "#daad0b" : "currentColor"}
+              />
+            </button>
             <button
               onClick={(e) => {
                 e.stopPropagation();

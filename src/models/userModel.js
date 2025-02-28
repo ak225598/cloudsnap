@@ -37,6 +37,10 @@ const userSchema = new mongoose.Schema(
         createdAt: {
             type: Date,
             default: Date.now
+        },
+        isFav: {
+            type : Boolean,
+            default: false
         }
     }],
     lastLogin: {
