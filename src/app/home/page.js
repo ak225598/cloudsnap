@@ -5,6 +5,7 @@ import UploadComponent from "@/components/MediaUploader";
 import Media from "@/components/Media";
 import Help from "@/components/Help";
 import Settings from "@/components/Settings";
+import Favorite from "@/components/Favorite";
 
 const components = {
   media: Media,
@@ -12,6 +13,7 @@ const components = {
   help: Help,
   settings: Settings,
   profile: Profile,
+  favorite: Favorite,
 };
 
 function Home() {
@@ -46,6 +48,9 @@ function Home() {
           </NavItem>
           <NavItem component="upload" imgSrc="/upload.png" alt="Upload">
             Upload
+          </NavItem>
+          <NavItem component="favorite" imgSrc="/heart.png" alt="favorite">
+            Favorite
           </NavItem>
         </div>
         <div>
