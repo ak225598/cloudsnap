@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { Download, Copy, Share2, Star, MoreVertical } from "lucide-react";
+import { Download, Copy, Share2, Star, MoreVertical, Play } from "lucide-react";
 import axios from "axios";
 import getFileType from "@/helpers/getFileType";
 
