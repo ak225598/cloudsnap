@@ -3,6 +3,7 @@ import axios from "axios";
 import { Search, ChevronDown } from "lucide-react";
 import MediaCard from "./MediaCard";
 import getFileType from "@/helpers/getFileType";
+import LoadingSpinner from "./LoadingSpinner";
 
 // Custom dropdown component for sorting and filtering
 function CustomDropdown({ options, value, onChange, placeholder }) {
@@ -166,7 +167,7 @@ function Media() {
       </div>
       {isLoading ? (
         <div className="text-center">
-          <p>Loading...</p>
+          <LoadingSpinner />
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">

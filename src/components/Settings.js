@@ -3,6 +3,7 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import LoadingSpinner from "./LoadingSpinner";
 
 function Settings() {
   const router = useRouter();
@@ -11,8 +12,10 @@ function Settings() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isDeletePasswordPopupOpen, setIsDeletePasswordPopupOpen] = useState(false);
-  const [isDeleteConfirmPopupOpen, setIsDeleteConfirmPopupOpen] = useState(false);
+  const [isDeletePasswordPopupOpen, setIsDeletePasswordPopupOpen] =
+    useState(false);
+  const [isDeleteConfirmPopupOpen, setIsDeleteConfirmPopupOpen] =
+    useState(false);
   const [deletePassword, setDeletePassword] = useState("");
 
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
@@ -270,7 +273,7 @@ function Settings() {
             </div>
           </>
         ) : (
-          <p>Loading...</p>
+          <LoadingSpinner />
         )}
       </div>
 

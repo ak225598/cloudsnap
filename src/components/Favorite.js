@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import MediaCard from "./MediaCard";
+import LoadingSpinner from "./LoadingSpinner";
 
 export default function Favorite() {
   const [userData, setUserData] = useState(null);
@@ -42,7 +43,7 @@ export default function Favorite() {
         </h2>
         {isLoading ? (
           <div className="text-center">
-            <p>Loading...</p>
+            <LoadingSpinner/>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">

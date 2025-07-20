@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserDetails, logoutUser } from "../app/home/profileSlice";
+import LoadingSpinner from "./LoadingSpinner";
 
 function Profile() {
   const router = useRouter();
@@ -34,7 +34,7 @@ function Profile() {
     router.push("/login");
   };
 
-  if (profile.status === "loading") return <p>Loading...</p>;
+  if (profile.status === "loading") return <LoadingSpinner />;
 
   return (
     <div className="flex flex-col items-center p-8 rounded-lg shadow-lg bg-white m-5">
