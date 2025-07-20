@@ -11,12 +11,9 @@ export async function GET(req) {
     const user = await User.findOne({ _id: userId }).select("-password");
 
     return NextResponse.json({
-      message: "User found",
+      message: "Media found",
       data: {
-        username: user.username,
-        email: user.email,
-        lastLogin: user.lastLogin,
-        createdAt: user.createdAt,
+        media: user.media,
       },
     });
   } catch (error) {

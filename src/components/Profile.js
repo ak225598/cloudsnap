@@ -14,8 +14,8 @@ function Profile() {
     dispatch(getUserDetails());
   }, [dispatch]);
 
-  const handleLogout = () => {
-    dispatch(logoutUser());
+  const handleLogout = async () => {
+    await dispatch(logoutUser());
     router.push("/login");
   };
 

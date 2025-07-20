@@ -79,7 +79,7 @@ function Media() {
   const getUserDetails = async () => {
     try {
       setIsLoading(true);
-      const res = await axios.get("/api/users/getUserDetails");
+      const res = await axios.get("/api/users/getUserMedia");
       setUserData(res.data.data);
     } catch (error) {
       console.error("Error fetching user details:", error);
