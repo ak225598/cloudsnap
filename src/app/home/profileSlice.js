@@ -12,9 +12,7 @@ export const getUserDetails = createAsyncThunk(
   "profile/getUserDetails",
   async (_, { rejectWithValue }) => {
     try {
-      console.log("Calling API...");
       const response = await axios.get("/api/users/getUserDetails");
-      console.log("API response:", response.data);
       return response.data.data;
     } catch (error) {
       console.error("Error fetching user details:", error);

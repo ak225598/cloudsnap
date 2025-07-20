@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserDetails, logoutUser } from "../app/home/profileSlice";
 import LoadingSpinner from "./LoadingSpinner";
+import { formatDateLastLogin, formatDateMemberSince } from "@/helpers/utils";
 
 function Profile() {
   const router = useRouter();
@@ -12,22 +13,6 @@ function Profile() {
   useEffect(() => {
     dispatch(getUserDetails());
   }, [dispatch]);
-
-  const formatDateMemberSince = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
-
-  const formatDateLastLogin = (dateString) => {
-    const options = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
 
   const handleLogout = () => {
     dispatch(logoutUser());
@@ -58,7 +43,7 @@ function Profile() {
           </p>
           <p>
             <strong>Member Since:</strong>{" "}
-            {formatDateMemberSince(profile.createdAt)}
+            {formatDateMemberSince(profile.memberSince)}
           </p>
         </div>
         <div className="flex justify-center">
