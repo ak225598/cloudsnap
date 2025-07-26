@@ -15,7 +15,7 @@ export default function Favorite() {
   const getUserDetails = async () => {
     try {
       setIsLoading(true);
-      const res = await axios.get("/api/users/getUserMedia");
+      const res = await axios.get("/api/users/getFavMedia");
       setUserData(res.data.data);
     } catch (error) {
       console.error("Error fetching user details:", error);
@@ -31,10 +31,9 @@ export default function Favorite() {
     }));
   };
 
-  const favoriteMedia = userData?.media
-    .filter((media) => {
-      return media.isFav;
-    });
+  const favoriteMedia = userData?.media.filter((media) => {
+    return media.isFav;
+  });
   return (
     <div>
       <div className="container px-8 py-4">
@@ -43,7 +42,7 @@ export default function Favorite() {
         </h2>
         {isLoading ? (
           <div className="text-center">
-            <LoadingSpinner/>
+            <LoadingSpinner />
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
